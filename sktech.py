@@ -5,18 +5,25 @@ from werkzeug.utils import secure_filename
 import os
 from PIL import Image
 
+# Initialize Flask app
+app = Flask(__name__)
+UPLOAD_FOLDER = "uploads"
+OUTPUT_FOLDER = "outputs"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
+# Check if CUDA is available
 device = "cuda" if torch.cuda.is_available() else "cpu"
 dtype = torch.float16 if device == "cuda" else torch.float32
 
+# Load ControlNet model
 controlnet = ControlNetModel.from_pretrained("lllyasviel/control_v11p_sd15_lineart", torch_dtype=dtype)
 pipeline = StableDiffusionControlNetPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5",
     controlnet=controlnet,
     torch_dtype=dtype
 )
+pipeline.to(device)
 
 def process_image(image_path):
     image = Image.open(image_path).convert("RGB")
