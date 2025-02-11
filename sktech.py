@@ -6,11 +6,7 @@ import os
 from PIL import Image
 
 # Initialize Flask app
-app = Flask(__name__)
-UPLOAD_FOLDER = "uploads"
-OUTPUT_FOLDER = "outputs"
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
 
 # Check if CUDA is available
 device = "cuda" if torch.cuda.is_available() else "cpu"
